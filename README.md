@@ -1,1 +1,1 @@
-/under constructions and requires specific directory sturcture to compile/
+/under constructions and requires specific directory structure to compile/
