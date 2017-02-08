@@ -1,2 +1,1 @@
-# Click.Play
-/Full-screen click counter/
+/under constructions and requires specific directory sturcture to compile/
