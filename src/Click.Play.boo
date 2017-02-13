@@ -1,5 +1,5 @@
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Click//Play upcounter v0.02
+# Click//Play upcounter v0.03
 # Developed in 2015 by Guevara-chan
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -14,6 +14,7 @@ class ExLabel(Label):
 	property Gist = ""
 	property shifter = 0
 	property dbg as bool
+	property offset as int
 
 	# --Methods goes here.
 	def constructor(parent_form as Form):
@@ -24,19 +25,17 @@ class ExLabel(Label):
 		parent_form.Controls.Add(self)
 
 	def shift(step as int):
-		shifter = (shifter + step) % (gist_width)
+		offset = (offset - step) % ClientSize.Width
+		Invalidate()
 
 	def unpack_gist():
-		Text = Gist * (parent_width / gist_width + 4)
+		Text = Gist * (parent_width / CreateGraphics().MeasureString(Gist, Font).Width + 2)
 
 	def invert():
 		ForeColor, BackColor = BackColor, ForeColor
 
 	def locate(x_dest as int, y_dest as int):
 		Location = Point(x_dest, y_dest)
-
-	gist_width as int:
-		get: return CreateGraphics().MeasureString(Gist, Font).Width
 
 	parent_width as int:
 		get: return FindForm().Width
@@ -46,6 +45,15 @@ class ExLabel(Label):
 
 	center_y as int:
 		get: return (FindForm().Height - Height) / 2
+
+	override def OnPaint(e as PaintEventArgs):
+		super.OnPaint(e)
+		textBrush = SolidBrush(ForeColor)
+		backBrush = SolidBrush(BackColor)
+		e.Graphics.FillRectangle(backBrush, e.ClipRectangle)
+		e.Graphics.DrawString(Text, Font, textBrush, offset, 0)
+		e.Graphics.DrawString(Text, Font, textBrush, ClientSize.Width + offset, 0)
+		e.Graphics.DrawString(Text, Font, textBrush, -ClientSize.Width + offset, 0)
 # -------------------- #
 class SUI:
 	sound_box = {}
@@ -71,7 +79,7 @@ class GUI:
 	final right_mark 	= ExLabel(win, Text: "⋮</clicks>⋮")
 	final add_mark		= ExLabel(win, Gist: "| Left click to add |")
 	final sub_mark		= ExLabel(win, Gist: "| Right click to sub |")
-	final title			= ExLabel(win, Text: "=[Click//Play upcounter v0.02]=")
+	final title			= ExLabel(win, Text: "=[Click//Play upcounter v0.03]=")
 	final copyright		= ExLabel(win, Text: "{...Developed in 2015 by V.A. Guevara...}")
 	final esc_mark		= ExLabel(win, Gist: "| ESC to exit |")
 	final del_mark		= ExLabel(win, Gist: "| DEL to null |")
@@ -116,14 +124,14 @@ class GUI:
 		copyright.Font	= tag_font; title.Font		= tag_font
 		# -
 		add_mark.unpack_gist()	; sub_mark.unpack_gist(); esc_mark.unpack_gist(); del_mark.unpack_gist()
-		add_mark.shift(1)		; sub_mark.shift(1)  	; esc_mark.shift(1)		; del_mark.shift(1)
+		add_mark.shift(1)		; sub_mark.shift(1)  	; esc_mark.shift(-1)	; del_mark.shift(-1)
 				# -
-		add_mark.locate	(add_mark.center_x + add_mark.shifter, counter.Location.Y - add_mark.Height - 30)
-		sub_mark.locate	(sub_mark.center_x - sub_mark.shifter, counter.Location.Y + counter.Height + 30)
+		add_mark.locate	(add_mark.center_x, counter.Location.Y - add_mark.Height - 30)
+		sub_mark.locate	(sub_mark.center_x, counter.Location.Y + counter.Height + 30)
 		title.locate	(title.center_x, add_mark.Location.Y - title.Height)
 		copyright.locate(copyright.center_x, sub_mark.Location.Y + sub_mark.Height)
-		esc_mark.locate	(esc_mark.center_x - esc_mark.shifter, title.Location.Y - esc_mark.Height)
-		del_mark.locate	(del_mark.center_x + del_mark.shifter, copyright.Location.Y + copyright.Height)		
+		esc_mark.locate	(esc_mark.center_x, title.Location.Y - esc_mark.Height)
+		del_mark.locate	(del_mark.center_x, copyright.Location.Y + copyright.Height)		
 
 	def click_play(sender, e as MouseEventArgs):
 		if e.Button == MouseButtons.Right:
