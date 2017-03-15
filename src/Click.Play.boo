@@ -51,9 +51,8 @@ class ExLabel(Label):
 		textBrush = SolidBrush(ForeColor)
 		backBrush = SolidBrush(BackColor)
 		e.Graphics.FillRectangle(backBrush, e.ClipRectangle)
-		e.Graphics.DrawString(Text, Font, textBrush, offset, 0)
-		e.Graphics.DrawString(Text, Font, textBrush, ClientSize.Width + offset, 0)
-		e.Graphics.DrawString(Text, Font, textBrush, -ClientSize.Width + offset, 0)
+		for factor in range(-1, 2):
+			e.Graphics.DrawString(Text, Font, textBrush, factor * ClientSize.Width + offset, 0)
 # -------------------- #
 class SUI:
 	sound_box = {}
@@ -61,15 +60,13 @@ class SUI:
 	# --Methods goes here.
 	def constructor():
 		asm = System.Reflection.Assembly.GetExecutingAssembly()
-		add("inc"	, asm.GetManifestResourceStream("inc_sound"))
-		add("dec"	, asm.GetManifestResourceStream("dec_sound"))
-		add("null"	, asm.GetManifestResourceStream("null_sound"))
+		for id in ("inc", "dec", "null"): add(id, asm.GetManifestResourceStream("$(id)_sound"))
 
 	def add(id as string, src as Stream):
 		sound_box[id] = SoundPlayer(src)
 
 	def play(id as string):
-		(sound_box[id] cast SoundPlayer).Play()
+		(sound_box[id] as SoundPlayer).Play()
 # -------------------- #
 class GUI:
 	final win 			= Form(FormBorderStyle: FormBorderStyle.None, WindowState: FormWindowState.Maximized, 
