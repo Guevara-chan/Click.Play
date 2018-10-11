@@ -5,8 +5,8 @@ It was designed with obvious [Ninjadoodle](https://www.ninjadoodle.com/Miniclip)
 # 「Featuræ」
 * _Left click_ to add !
 * _Right click_ to sub !
-* _Del_ to null !
-* _ESC_ to null !
+* _DEL_ to null !
+* _ESC_ to exit !
 
 # 「Reassembling」
 __[Click.Play]__ was written entirelly in [Boo v0.9.7.0](https://github.com/boo-lang/boo) with auxiliary build script provided in _Shell_.   
