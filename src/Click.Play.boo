@@ -55,15 +55,20 @@ class ExLabel(Label):
 			e.Graphics.DrawString(Text, Font, textBrush, factor * ClientSize.Width + offset, 0)
 # -------------------- #
 class SUI:
+	public static final assembly = Reflection.Assembly.GetExecutingAssembly()
 	sound_box = {}
 
 	# --Methods goes here.
 	def constructor():
 		asm = System.Reflection.Assembly.GetExecutingAssembly()
-		for id in ("inc", "dec", "null"): add(id, asm.GetManifestResourceStream("$(id)_sound"))
+		for id in ("inc", "dec", "null"): add(id)
 
-	def add(id as string, src as Stream):
-		sound_box[id] = SoundPlayer(src)
+	def find_res(id as string) as Stream:
+		if assembly.IsDynamic: return File.OpenRead("$(id)_btn.wav")
+		else: return assembly.GetManifestResourceStream("$(id)_sound")
+
+	def add(id as string):
+		sound_box[id] = SoundPlayer(find_res(id))
 
 	def play(id as string):
 		(sound_box[id] as SoundPlayer).Play()
