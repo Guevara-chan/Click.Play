@@ -1,5 +1,6 @@
 # 「Sum」
-__[Click.Play]__ is a stylised fullscreen clicker app, developed by freindly request.
+__[Click.Play]__ is a stylised fullscreen clicker app, developed by freindly request.  
+It was developed with obvious [Ninjadoodle](https://www.ninjadoodle.com/Miniclip) puzzle series reference in mid.
 
 # 「Featuræ」
 * _Left click_ to add !
